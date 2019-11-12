@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="398.9609375" prefWidth="615.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.shine2share.FiController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <Text fx:id="txtHello" fontSmoothingType="LCD" layoutX="232.0" layoutY="27.0" opacity="0.73" strikethrough="false" stroke="$null" strokeLineCap="SQUARE" strokeType="OUTSIDE" strokeWidth="0.9" text="HAVE A NICE DAY" textAlignment="JUSTIFY">
+      <fill>
+        <Color blue="0.961" green="0.000" red="1.000" fx:id="x2" />
+      </fill>
+      <font>
+        <Font name="MS Reference Sans Serif" size="16.0" />
+      </font>
+    </Text>
+    <TextField fx:id="txtLinkFile" layoutX="143.0" layoutY="51.0" prefHeight="21.0" prefWidth="421.0" />
+    <Text layoutX="5.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Link Folder chứa file:">
+      <font>
+        <Font size="14.0" fx:id="x1" />
+      </font>
+    </Text>
+    <Button fx:id="btnGetLink" font="$x1" layoutX="204.0" layoutY="81.0" mnemonicParsing="false" onAction="#getLinkFile" text="Nhập Link xong thì click me!!!" />
+    <Pane layoutX="32.0" layoutY="171.0" prefHeight="184.0" prefWidth="550.0">
+      <children>
+        <Button id="btn" fx:id="btnA1" font="$x1" layoutX="27.0" layoutY="15.0" mnemonicParsing="false" onAction="#formatA1" prefWidth="69.0" text="A1" />
+        <Button fx:id="btnColor" font="$x1" layoutX="27.0" layoutY="60.0" mnemonicParsing="false" onAction="#setColor" text="COLOR" textFill="$x2" />
+        <ComboBox fx:id="cmbColor" layoutX="128.0" layoutY="61.0" onAction="#choiceColor" prefHeight="24.999916894528724">
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <String fx:value="BLACK" />
+              <String fx:value="WHITE" />
+              <String fx:value="RED" />
+              <String fx:value="GREEN" />
+              <String fx:value="BLUE" />
+              <String fx:value="YELLOW" />
+            </FXCollections>
+          </items>
+        </ComboBox>
+      </children>
+    </Pane>
+    <Text fx:id="txtCopyright" font="$x1" layoutX="497.0" layoutY="386.0" scaleX="1.109610156066023" scaleY="1.2873738865933273" strokeType="OUTSIDE" strokeWidth="0.0" text="Nguyễn Thế Lâm" />
+    <Text fx:id="txtResult" fill="#00d100" layoutX="213.0" layoutY="132.0" scaleX="1.4665698892858452" scaleY="1.5019349608418993" strokeType="OUTSIDE" strokeWidth="0.0" text="Result" textAlignment="JUSTIFY">
+      <font>
+        <Font name="System Bold" size="12.0" />
+      </font>
+    </Text>
+  </children>
+</AnchorPane>
