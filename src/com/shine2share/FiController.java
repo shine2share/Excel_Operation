@@ -91,9 +91,11 @@ public class FiController implements Initializable {
 	@Setter
 	private int zoomValue;
 
+	@SuppressWarnings("rawtypes")
 	@FXML
 	private ListView lsWord;
 
+	@SuppressWarnings("rawtypes")
 	@FXML
 	private ListView lsResult;
 	
@@ -105,13 +107,17 @@ public class FiController implements Initializable {
 		showSpecWordListView();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void showSpecWordListView() {
+		@SuppressWarnings("rawtypes")
 		ObservableList elements = FXCollections.observableArrayList();
 		elements.addAll(getSpecWord());
 		lsWord.setItems(elements);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void showResultSpecWordListView(List<String> response) {
+		@SuppressWarnings("rawtypes")
 		ObservableList elements = FXCollections.observableArrayList();
 		elements.addAll(getResultSpecWord(response));
 		lsResult.setItems(elements);
@@ -129,7 +135,9 @@ public class FiController implements Initializable {
 
 	public void searchSpecWord() {
 		this.txtResult.setText("");
+		@SuppressWarnings("rawtypes")
 		ObservableList items = lsWord.getItems();
+		@SuppressWarnings("unused")
 		int size = items.size();
 		Object searchWordObj = lsWord.getSelectionModel().getSelectedItem();
 		if (searchWordObj == null) {
@@ -272,6 +280,7 @@ public class FiController implements Initializable {
 		this.txtResult.setText(response);
 	}
 
+	@SuppressWarnings("unused")
 	private String deleteSpecWordFromTxtFile(String lineToRemove) {
 
 		try {
