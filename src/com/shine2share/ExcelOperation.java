@@ -14,8 +14,12 @@ import java.util.stream.Stream;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTSheetView;
@@ -367,5 +371,185 @@ public class ExcelOperation {
 		}
 		return "Delete #Value: SUCCESS";
 	}
+///////////////////////////////////insert new column///////////////////////////////////////////////
+/////////////////////////////////insert new column///////////////////////////////////////////////
+/////////////////////////////////insert new column///////////////////////////////////////////////
+/////////////////////////////////insert new column///////////////////////////////////////////////
+/////////////////////////////////insert new column///////////////////////////////////////////////
+/////////////////////////////////insert new column///////////////////////////////////////////////
+/////////////////////////////////insert new column///////////////////////////////////////////////
+	/**
+	 * insert new column before D column with title テストケース and change title of E (after insert) to Testcase
+	 * @param linkFi
+	 * @return
+	 */
+	public String insertJpColumn(String linkFi) {
+		List<XSSFWorkbook> workbooks = new ArrayList<>();
+		try {
+			List<InputStream> files = initialize(linkFi);
+			int j;
+			for (j = 0; j < files.size(); ++j) {
+				this.workbook = new XSSFWorkbook(files.get(j));
+				workbooks.add(this.workbook);
+				
+				FormulaEvaluator evaluator = workbook.getCreationHelper()
+						.createFormulaEvaluator();
+				evaluator.clearAllCachedResultValues();
+				
+				int numberOfSheet = this.workbook.getNumberOfSheets();
+				int i;
+				// the first 2 sheet are not need to insert
+				for (i = 2; i < numberOfSheet; ++i) {
+					Sheet sheet = workbook.getSheetAt(i);
+					int nrRows = getNumberOfRows(i);
+					int nrCols = getNrColumns(i);
+					System.out.println("Inserting new column...");
+					for (int row = 0; row < nrRows; row++) {
+						Row r = sheet.getRow(row);
 
+						if (r == null) {
+							continue;
+						}
+
+						// shift to right
+						// columnIndex = 2
+						for (int col = nrCols; col > 2; col--) {
+							Cell rightCell = r.getCell(col);
+							if (rightCell != null) {
+								r.removeCell(rightCell);
+							}
+
+							Cell leftCell = r.getCell(col - 1);
+
+							if (leftCell != null) {
+								Cell newCell = r.createCell(col, leftCell.getCellType());
+								cloneCell(newCell, leftCell);
+								if (newCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+									newCell.setCellFormula(ExcelHelper.updateFormula(newCell.getCellFormula(), 2));
+									evaluator.notifySetFormula(newCell);
+									CellValue cellValue = evaluator.evaluate(newCell);
+									evaluator.evaluateFormulaCell(newCell);
+									System.out.println(cellValue);
+								}
+							}
+						}
+
+						// delete old column
+						int cellType = Cell.CELL_TYPE_BLANK;
+
+						Cell currentEmptyWeekCell = r.getCell(2);
+						if (currentEmptyWeekCell != null) {
+//							cellType = currentEmptyWeekCell.getCellType();
+							r.removeCell(currentEmptyWeekCell);
+						}
+
+						// create new column
+						r.createCell(2, cellType);
+					}
+					
+					// Adjust the column widths
+					for (int col = nrCols; col > 2; col--) {
+						sheet.setColumnWidth(col, sheet.getColumnWidth(col - 1));
+					}
+					
+					// currently updates formula on the last cell of the moved column
+					// TODO: update all cells if their formulas contain references to the moved cell
+//					Row specialRow = sheet.getRow(nrRows-1);
+//					Cell cellFormula = specialRow.createCell(nrCols - 1);
+//					cellFormula.setCellType(XSSFCell.CELL_TYPE_FORMULA);
+//					cellFormula.setCellFormula(formula);
+
+					XSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Insert JP Column: FAIL";
+		}
+		if (!write2File(linkFi, workbooks)) {
+			return "Insert JP Column: FAIL";
+		}
+		return "Insert JP Column: SUCCESS";
+	}
+	
+	private int getNumberOfRows(int sheetIndex) {
+		assert workbook != null;
+
+		int sheetNumber = workbook.getNumberOfSheets();
+
+		System.out.println("Found " + sheetNumber + " sheets.");
+
+		if (sheetIndex >= sheetNumber) {
+			throw new RuntimeException("Sheet index " + sheetIndex
+					+ " invalid, we have " + sheetNumber + " sheets");
+		}
+
+		Sheet sheet = workbook.getSheetAt(sheetIndex);
+
+		int rowNum = sheet.getLastRowNum() + 1;
+
+		System.out.println("Found " + rowNum + " rows.");
+
+		return rowNum;
+	}
+	
+	private int getNrColumns(int sheetIndex) {
+		assert workbook != null;
+
+		Sheet sheet = workbook.getSheetAt(sheetIndex);
+
+		// get header row
+		Row headerRow = sheet.getRow(0);
+		int nrCol = headerRow.getLastCellNum();
+
+		// while
+		// (!headerRow.getCell(nrCol++).getStringCellValue().equals(LAST_COLUMN_HEADER));
+
+		// while (nrCol <= headerRow.getPhysicalNumberOfCells()) {
+		// Cell c = headerRow.getCell(nrCol);
+		// nrCol++;
+		//
+		// if (c!= null && c.getCellType() == Cell.CELL_TYPE_STRING) {
+		// if (c.getStringCellValue().equals(LAST_COLUMN_HEADER)) {
+		// break;
+		// }
+		// }
+		// }
+
+		System.out.println("Found " + nrCol + " columns.");
+		return nrCol;
+
+	}
+	
+	/*
+	 * Takes an existing Cell and merges all the styles and forumla into the new
+	 * one
+	 */
+	private static void cloneCell(Cell cNew, Cell cOld) {
+		cNew.setCellComment(cOld.getCellComment());
+		cNew.setCellStyle(cOld.getCellStyle());
+
+		switch (cOld.getCellType()) {
+		case Cell.CELL_TYPE_BOOLEAN: {
+			cNew.setCellValue(cOld.getBooleanCellValue());
+			break;
+		}
+		case Cell.CELL_TYPE_NUMERIC: {
+			cNew.setCellValue(cOld.getNumericCellValue());
+			break;
+		}
+		case Cell.CELL_TYPE_STRING: {
+			cNew.setCellValue(cOld.getStringCellValue());
+			break;
+		}
+		case Cell.CELL_TYPE_ERROR: {
+			cNew.setCellValue(cOld.getErrorCellValue());
+			break;
+		}
+		case Cell.CELL_TYPE_FORMULA: {
+			cNew.setCellFormula(cOld.getCellFormula());
+			break;
+		}
+		}
+	}
 }

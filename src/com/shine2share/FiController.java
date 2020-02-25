@@ -101,6 +101,9 @@ public class FiController implements Initializable {
 	
 	@FXML
 	private Button btnDeleteValue;
+	
+	@FXML
+	private Button btnInsertJpColumn;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -387,5 +390,14 @@ public class FiController implements Initializable {
 		this.txtResult.setText(response);
 	}
 	
-	
+	public void insertJpColumn() {
+		if (StringUtils.isEmpty(this.linkFi)) {
+			this.txtResult.setText("Nhập link đi cưng");
+			return;
+		}
+		this.txtResult.setText("");
+		excelOperation = new ExcelOperation();
+		String response = excelOperation.insertJpColumn(this.linkFi);
+		this.txtResult.setText(response);
+	}
 }

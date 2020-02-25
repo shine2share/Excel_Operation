@@ -67,11 +67,12 @@
         </ComboBox>
         <Button fx:id="btnZoom" layoutX="27.0" layoutY="195.0" mnemonicParsing="false" onAction="#setZoom" prefHeight="25.0" prefWidth="81.0" text="Set Zoom" />
         <TextField fx:id="txtZoom" layoutX="128.0" layoutY="195.0" prefHeight="25.000099999997474" prefWidth="72.0" promptText="" text="" />
-        <Button fx:id="btnDeleteValue" layoutX="453.0" layoutY="12.0" mnemonicParsing="false" onAction="#deleteValue" text="Delete#Value">
+        <Button fx:id="btnDeleteValue" layoutX="483.0" layoutY="52.0" mnemonicParsing="false" onAction="#deleteValue" text="Delete#Value">
           <font>
-            <Font name="System Bold Italic" size="14.0" />
+            <Font name="System Bold Italic" size="14.0" fx:id="x5" />
           </font>
         </Button>
+        <Button fx:id="btnInsertJpColumn" font="$x5" layoutX="462.0" layoutY="14.0" mnemonicParsing="false" onAction="#insertJpColumn" text="Insert JP column" />
       </children>
     </Pane>
     <Text fx:id="txtCopyright" fill="$x2" layoutX="235.0" layoutY="709.0" scaleX="1.109610156066023" scaleY="1.2873738865933273" strokeType="OUTSIDE" strokeWidth="0.0" text="From Anh with Love">
