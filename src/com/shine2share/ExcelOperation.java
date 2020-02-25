@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -321,6 +322,65 @@ public class ExcelOperation {
 			return false;
 		}
 		return true;
+	}
+
+	// new update
+	/**
+	 * Delete #Value after run GOOGLETRANSLATE in google docs app
+	 * 
+	 * @param linkFi
+	 * @return
+	 */
+	public String deleteValue(String linkFi) {
+		List<XSSFWorkbook> workbooks = new ArrayList<>();
+		try {
+			List<InputStream> files = initialize(linkFi);
+			int j;
+			for (j = 0; j < files.size(); ++j) {
+				this.workbook = new XSSFWorkbook(files.get(j));
+				workbooks.add(this.workbook);
+
+				int numberOfSheet = this.workbook.getNumberOfSheets();
+				int i;
+				FormulaEvaluator evaluator = this.workbook.getCreationHelper().createFormulaEvaluator();
+
+				for (i = 0; i < numberOfSheet; ++i) {
+					for (Row row : this.workbook.getSheetAt(i)) {
+						for (Cell cell : row) {
+//
+//							if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+//								System.out.println("rich: " + cell.getRichStringCellValue().getString());
+//								System.out.println(": " + cell.getStringCellValue());
+//								if ("#VALUE!".equals(cell.getRichStringCellValue().getString())) {
+//									System.out.println("in here string");
+//									cell.setCellValue("");
+//								}
+//							}
+
+							if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+								switch (cell.getCachedFormulaResultType()) {
+								case Cell.CELL_TYPE_STRING:
+									if ("#VALUE!".equals(cell.getRichStringCellValue().getString())) {
+										System.out.println("in here fomular");
+										cell.setCellType(Cell.CELL_TYPE_STRING);
+										cell.setCellValue("");
+									}
+									break;
+								}
+							}
+						}
+
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Delete #Value: FAIL";
+		}
+		if (!write2File(linkFi, workbooks)) {
+			return "Delete #Value: FAIL";
+		}
+		return "Delete #Value: SUCCESS";
 	}
 
 }

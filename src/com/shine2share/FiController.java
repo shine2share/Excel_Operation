@@ -96,6 +96,9 @@ public class FiController implements Initializable {
 
 	@FXML
 	private ListView lsResult;
+	
+	@FXML
+	private Button btnDeleteValue;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -361,4 +364,19 @@ public class FiController implements Initializable {
 		showSpecWordListView();
 		return "Xóa spec word thành công";
 	}
+	
+	
+	//update
+	public void deleteValue() {
+		if (StringUtils.isEmpty(this.linkFi)) {
+			this.txtResult.setText("Nhập link đi cưng");
+			return;
+		}
+		this.txtResult.setText("");
+		excelOperation = new ExcelOperation();
+		String response = excelOperation.deleteValue(this.linkFi);
+		this.txtResult.setText(response);
+	}
+	
+	
 }

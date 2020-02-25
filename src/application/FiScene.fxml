@@ -67,9 +67,14 @@
         </ComboBox>
         <Button fx:id="btnZoom" layoutX="27.0" layoutY="195.0" mnemonicParsing="false" onAction="#setZoom" prefHeight="25.0" prefWidth="81.0" text="Set Zoom" />
         <TextField fx:id="txtZoom" layoutX="128.0" layoutY="195.0" prefHeight="25.000099999997474" prefWidth="72.0" promptText="" text="" />
+        <Button fx:id="btnDeleteValue" layoutX="453.0" layoutY="12.0" mnemonicParsing="false" onAction="#deleteValue" text="Delete#Value">
+          <font>
+            <Font name="System Bold Italic" size="14.0" />
+          </font>
+        </Button>
       </children>
     </Pane>
-    <Text fx:id="txtCopyright" fill="#ff00f5" layoutX="235.0" layoutY="709.0" scaleX="1.109610156066023" scaleY="1.2873738865933273" strokeType="OUTSIDE" strokeWidth="0.0" text="From Anh with Love">
+    <Text fx:id="txtCopyright" fill="$x2" layoutX="235.0" layoutY="709.0" scaleX="1.109610156066023" scaleY="1.2873738865933273" strokeType="OUTSIDE" strokeWidth="0.0" text="From Anh with Love">
       <font>
         <Font name="Lucida Sans Regular" size="16.0" />
       </font>
@@ -88,7 +93,7 @@
     <TextField fx:id="txtNewSpecWord" layoutX="241.0" layoutY="419.0" prefWidth="145.0" />
     <Button fx:id="btnAddSpecWord" font="$x4" layoutX="241.0" layoutY="460.0" mnemonicParsing="false" onAction="#addSpecWord" prefWidth="144.9296875" text="Add Spec Word" textFill="#009918" />
     <Button fx:id="btnDeleteSpecWord" layoutX="241.0" layoutY="503.0" mnemonicParsing="false" onAction="#removeSpecWord" prefWidth="144.9296875" text="Delete Spec Word" textFill="RED" />
-    <Button fx:id="btnSearchSpecWord" layoutX="242.0" layoutY="546.0" mnemonicParsing="false" onAction="#searchSpecWord" prefWidth="144.9296875" text="Search specword" textFill="#ff00f5" />
+    <Button fx:id="btnSearchSpecWord" layoutX="242.0" layoutY="546.0" mnemonicParsing="false" onAction="#searchSpecWord" prefWidth="144.9296875" text="Search specword" textFill="$x2" />
     <ListView fx:id="lsResult" layoutX="397.0" layoutY="419.0" prefHeight="273.0" prefWidth="275.0" />
     <Label font="$x1" layoutX="524.0" layoutY="392.0" text="Result" />
   </children>
