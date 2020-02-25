@@ -73,6 +73,9 @@
           </font>
         </Button>
         <Button fx:id="btnInsertJpColumn" font="$x5" layoutX="462.0" layoutY="14.0" mnemonicParsing="false" onAction="#insertJpColumn" text="Insert JP column" />
+        <Button fx:id="btnMergeCell" font="$x5" layoutX="503.0" layoutY="89.0" mnemonicParsing="false" onAction="#mergeCell" text="MergeCell" />
+        <Button fx:id="btnInsertGGFomular" font="$x5" layoutX="283.0" layoutY="14.0" mnemonicParsing="false" onAction="#insertGGFomular" text="Insert GG Fomular API" />
+        <Button fx:id="btnInsertGGFomularScreen" font="$x5" layoutX="277.0" layoutY="54.0" mnemonicParsing="false" onAction="#insertGGFomularScreen" text="Insert GG Fomular Screen" />
       </children>
     </Pane>
     <Text fx:id="txtCopyright" fill="$x2" layoutX="235.0" layoutY="709.0" scaleX="1.109610156066023" scaleY="1.2873738865933273" strokeType="OUTSIDE" strokeWidth="0.0" text="From Anh with Love">

@@ -18,6 +18,8 @@ import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -371,6 +373,7 @@ public class ExcelOperation {
 		}
 		return "Delete #Value: SUCCESS";
 	}
+
 ///////////////////////////////////insert new column///////////////////////////////////////////////
 /////////////////////////////////insert new column///////////////////////////////////////////////
 /////////////////////////////////insert new column///////////////////////////////////////////////
@@ -379,7 +382,9 @@ public class ExcelOperation {
 /////////////////////////////////insert new column///////////////////////////////////////////////
 /////////////////////////////////insert new column///////////////////////////////////////////////
 	/**
-	 * insert new column before D column with title テストケース and change title of E (after insert) to Testcase
+	 * insert new column before D column with title テストケース and change title of E
+	 * (after insert) to Testcase
+	 * 
 	 * @param linkFi
 	 * @return
 	 */
@@ -391,11 +396,10 @@ public class ExcelOperation {
 			for (j = 0; j < files.size(); ++j) {
 				this.workbook = new XSSFWorkbook(files.get(j));
 				workbooks.add(this.workbook);
-				
-				FormulaEvaluator evaluator = workbook.getCreationHelper()
-						.createFormulaEvaluator();
+
+				FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 				evaluator.clearAllCachedResultValues();
-				
+
 				int numberOfSheet = this.workbook.getNumberOfSheets();
 				int i;
 				// the first 2 sheet are not need to insert
@@ -446,12 +450,12 @@ public class ExcelOperation {
 						// create new column
 						r.createCell(2, cellType);
 					}
-					
+
 					// Adjust the column widths
 					for (int col = nrCols; col > 2; col--) {
 						sheet.setColumnWidth(col, sheet.getColumnWidth(col - 1));
 					}
-					
+
 					// currently updates formula on the last cell of the moved column
 					// TODO: update all cells if their formulas contain references to the moved cell
 //					Row specialRow = sheet.getRow(nrRows-1);
@@ -471,7 +475,7 @@ public class ExcelOperation {
 		}
 		return "Insert JP Column: SUCCESS";
 	}
-	
+
 	private int getNumberOfRows(int sheetIndex) {
 		assert workbook != null;
 
@@ -480,8 +484,7 @@ public class ExcelOperation {
 		System.out.println("Found " + sheetNumber + " sheets.");
 
 		if (sheetIndex >= sheetNumber) {
-			throw new RuntimeException("Sheet index " + sheetIndex
-					+ " invalid, we have " + sheetNumber + " sheets");
+			throw new RuntimeException("Sheet index " + sheetIndex + " invalid, we have " + sheetNumber + " sheets");
 		}
 
 		Sheet sheet = workbook.getSheetAt(sheetIndex);
@@ -492,7 +495,7 @@ public class ExcelOperation {
 
 		return rowNum;
 	}
-	
+
 	private int getNrColumns(int sheetIndex) {
 		assert workbook != null;
 
@@ -520,10 +523,9 @@ public class ExcelOperation {
 		return nrCol;
 
 	}
-	
+
 	/*
-	 * Takes an existing Cell and merges all the styles and forumla into the new
-	 * one
+	 * Takes an existing Cell and merges all the styles and forumla into the new one
 	 */
 	private static void cloneCell(Cell cNew, Cell cOld) {
 		cNew.setCellComment(cOld.getCellComment());
@@ -551,5 +553,148 @@ public class ExcelOperation {
 			break;
 		}
 		}
+	}
+
+	public String mergeCell(String linkFi) {
+		List<XSSFWorkbook> workbooks = new ArrayList<>();
+		try {
+			List<InputStream> files = initialize(linkFi);
+			int j;
+			for (j = 0; j < files.size(); ++j) {
+				this.workbook = new XSSFWorkbook(files.get(j));
+				workbooks.add(this.workbook);
+				int numberOfSheet = this.workbook.getNumberOfSheets();
+				int i;
+				for (i = 0; i < numberOfSheet; ++i) {
+					this.workbook.getSheetAt(i).addMergedRegion(new CellRangeAddress(11, 14, 3, 3));
+					System.out.println("Merge success");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "merge cell: FAIL";
+		}
+		if (!write2File(linkFi, workbooks)) {
+			return "merge cell: FAIL";
+		}
+		return "merge cell: SUCCESS";
+	}
+
+	public String insertGGFomular(String linkFi) {
+		List<XSSFWorkbook> workbooks = new ArrayList<>();
+		try {
+			List<InputStream> files = initialize(linkFi);
+			int j;
+			for (j = 0; j < files.size(); ++j) {
+				this.workbook = new XSSFWorkbook(files.get(j));
+				workbooks.add(this.workbook);
+				int numberOfSheet = this.workbook.getNumberOfSheets();
+				int i;
+				int k;
+				int numberOfRow = 0;
+				String googleFomular = "=GOOGLETRANSLATE(";
+				String googleFomular1 = "=GOOGLETRANSLATE(";
+				for (i = 0; i < numberOfSheet; ++i) {
+					
+					if (this.workbook.getSheetAt(i).getSheetName().contains("Data")) {
+						continue;
+					}
+					
+					numberOfRow = 0;
+					// xac dinh so row can loop
+					for (k = 0; k < 10000; ++k) {
+						if (this.workbook.getSheetAt(i).getRow(k+11).getCell(1).getNumericCellValue() == 0.0) {
+							break;
+						}
+						numberOfRow++;
+					}
+					
+					for (int m = 0; m < numberOfRow; ++m) {
+						
+						googleFomular += "H" + (12 + m) + ";\"en\";\"ja\")";
+						googleFomular1 += "J" + (12 + m) + ";\"en\";\"ja\")";
+						XSSFCell cell = this.workbook.getSheetAt(i).getRow(11+m).getCell(6);
+						XSSFCell cell1 = this.workbook.getSheetAt(i).getRow(11+m).getCell(8);
+						
+						cell.setCellValue(googleFomular);
+						cell1.setCellValue(googleFomular1);
+						googleFomular = "=GOOGLETRANSLATE(";
+						googleFomular1 = "=GOOGLETRANSLATE(";
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "insert GG fomular: FAIL";
+		}
+		if (!write2File(linkFi, workbooks)) {
+			return "insert GG fomular: FAIL";
+		}
+		return "insert GG fomular: SUCCESS";
+	}
+
+	public String insertGGFomularScreen(String linkFi) {
+		List<XSSFWorkbook> workbooks = new ArrayList<>();
+		try {
+			List<InputStream> files = initialize(linkFi);
+			int j;
+			for (j = 0; j < files.size(); ++j) {
+				this.workbook = new XSSFWorkbook(files.get(j));
+				workbooks.add(this.workbook);
+				int numberOfSheet = this.workbook.getNumberOfSheets();
+				int i;
+				int k;
+				int numberOfRow = 0;
+				String googleFomular = "=GOOGLETRANSLATE(";
+				String googleFomular1 = "=GOOGLETRANSLATE(";
+				String googleFomular2 = "=GOOGLETRANSLATE(";
+				String googleFomular3 = "=GOOGLETRANSLATE(";
+				for (i = 2; i < numberOfSheet; ++i) {
+					
+					if (this.workbook.getSheetAt(i).getSheetName().contains("Data")) {
+						continue;
+					}
+					
+					numberOfRow = 0;
+					// xac dinh so row can loop
+					for (k = 0; k < 10000; ++k) {
+						if (this.workbook.getSheetAt(i).getRow(k+7).getCell(1) == null) {
+							break;
+						}
+						if (this.workbook.getSheetAt(i).getRow(k+7).getCell(1).getNumericCellValue() == 0.0) {
+							break;
+						}
+						numberOfRow++;
+					}
+					
+					for (int m = 0; m < numberOfRow; ++m) {
+						
+						googleFomular += "D" + (8 + m) + ";\"en\";\"ja\")";
+						googleFomular1 += "F" + (8 + m) + ";\"en\";\"ja\")";
+						googleFomular2 += "I" + (8 + m) + ";\"en\";\"ja\")";
+						googleFomular3 += "K" + (8 + m) + ";\"en\";\"ja\")";
+						XSSFCell cell = this.workbook.getSheetAt(i).getRow(7+m).getCell(2);
+						XSSFCell cell1 = this.workbook.getSheetAt(i).getRow(7+m).getCell(4);
+						XSSFCell cell2 = this.workbook.getSheetAt(i).getRow(7+m).getCell(7);
+						XSSFCell cell3 = this.workbook.getSheetAt(i).getRow(7+m).getCell(9);
+						cell.setCellValue(googleFomular);
+						cell1.setCellValue(googleFomular1);
+						cell2.setCellValue(googleFomular2);
+						cell3.setCellValue(googleFomular3);
+						googleFomular = "=GOOGLETRANSLATE(";
+						googleFomular1 = "=GOOGLETRANSLATE(";
+						googleFomular2 = "=GOOGLETRANSLATE(";
+						googleFomular3 = "=GOOGLETRANSLATE(";
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "insert GG fomular: FAIL";
+		}
+		if (!write2File(linkFi, workbooks)) {
+			return "insert GG fomular: FAIL";
+		}
+		return "insert GG fomular: SUCCESS";
 	}
 }

@@ -104,6 +104,15 @@ public class FiController implements Initializable {
 	
 	@FXML
 	private Button btnInsertJpColumn;
+	
+	@FXML
+	private Button btnMergeCell;
+	
+	@FXML
+	private Button btnInsertGGFomular;
+	
+	@FXML
+	private Button btnInsertGGFomularScreen;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -398,6 +407,39 @@ public class FiController implements Initializable {
 		this.txtResult.setText("");
 		excelOperation = new ExcelOperation();
 		String response = excelOperation.insertJpColumn(this.linkFi);
+		this.txtResult.setText(response);
+	}
+	
+	public void mergeCell() {
+		if (StringUtils.isEmpty(this.linkFi)) {
+			this.txtResult.setText("Nhập link đi cưng");
+			return;
+		}
+		this.txtResult.setText("");
+		excelOperation = new ExcelOperation();
+		String response = excelOperation.mergeCell(this.linkFi);
+		this.txtResult.setText(response);
+	}
+	
+	public void insertGGFomular() {
+		if (StringUtils.isEmpty(this.linkFi)) {
+			this.txtResult.setText("Nhập link đi cưng");
+			return;
+		}
+		this.txtResult.setText("");
+		excelOperation = new ExcelOperation();
+		String response = excelOperation.insertGGFomular(this.linkFi);
+		this.txtResult.setText(response);
+	}
+	
+	public void insertGGFomularScreen() {
+		if (StringUtils.isEmpty(this.linkFi)) {
+			this.txtResult.setText("Nhập link đi cưng");
+			return;
+		}
+		this.txtResult.setText("");
+		excelOperation = new ExcelOperation();
+		String response = excelOperation.insertGGFomularScreen(this.linkFi);
 		this.txtResult.setText(response);
 	}
 }
