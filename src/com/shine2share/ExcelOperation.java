@@ -347,6 +347,9 @@ public class ExcelOperation {
 				int numberOfSheet = this.workbook.getNumberOfSheets();
 				int i;
 				for (i = 0; i < numberOfSheet; ++i) {
+					if (this.workbook.getSheetAt(i).getSheetName().contains("Data")) {
+						continue;
+					}
 					for (Row row : this.workbook.getSheetAt(i)) {
 						for (Cell cell : row) {
 							if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
@@ -560,14 +563,84 @@ public class ExcelOperation {
 		try {
 			List<InputStream> files = initialize(linkFi);
 			int j;
+			int firstRow = 0;
+			int lastRow = 0;
+			int firstCol = 0;
+			int lastCol = 0;
 			for (j = 0; j < files.size(); ++j) {
+				int numberOfRow = 0;
+				int k;
 				this.workbook = new XSSFWorkbook(files.get(j));
 				workbooks.add(this.workbook);
 				int numberOfSheet = this.workbook.getNumberOfSheets();
 				int i;
-				for (i = 0; i < numberOfSheet; ++i) {
-					this.workbook.getSheetAt(i).addMergedRegion(new CellRangeAddress(11, 14, 3, 3));
-					System.out.println("Merge success");
+				for (i = 2; i < numberOfSheet; ++i) {
+					System.out.println("sheet : " + this.workbook.getSheetAt(i).getSheetName());
+					if (this.workbook.isSheetHidden(i)) {
+						continue;
+					}
+					if (this.workbook.getSheetAt(i).getSheetName().contains("Data")) {
+						continue;
+					}
+					numberOfRow = 0;
+					// xac dinh so row can loop
+					for (k = 0; k < 10000; ++k) {
+						if (this.workbook.getSheetAt(i).getRow(k + 11) == null) {
+							break;
+						}
+						if (this.workbook.getSheetAt(i).getRow(k + 11).getCell(1) == null) {
+							break;
+						}
+						if (this.workbook.getSheetAt(i).getRow(k + 11).getCell(1).getNumericCellValue() == 0.0) {
+							break;
+						}
+						numberOfRow++;
+					}
+					int rowStepPlus = 0;
+					int temp = 0;
+					for (int m = 0; m < numberOfRow; ++m) {
+
+						for (Cell cell : this.workbook.getSheetAt(i).getRow(m + 11)) {
+							if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+								switch (cell.getCachedFormulaResultType()) {
+								case Cell.CELL_TYPE_STRING:
+									if (rowStepPlus > 0 && !"".equals(this.workbook.getSheetAt(i).getRow(11 + m)
+											.getCell(3).getStringCellValue())) {
+										System.out.println("first row: " + firstRow);
+										System.out.println("last row: " + (firstRow + rowStepPlus));
+										System.out.println("======================");
+										this.workbook.getSheetAt(i).addMergedRegion(
+												new CellRangeAddress(firstRow, firstRow + rowStepPlus, 3, 3));
+
+										// reset firstRow, lastRow value for next cell merge
+										firstRow = 0;
+										lastRow = 0;
+										rowStepPlus = 0;
+									}
+									if (rowStepPlus > 0 && this.workbook.getSheetAt(i).getRow(m + 11).getCell(1)
+											.getNumericCellValue() == numberOfRow) {
+										System.out.println("first row: " + firstRow);
+										System.out.println("last row: " + (firstRow + rowStepPlus));
+										System.out.println("======================");
+										this.workbook.getSheetAt(i).addMergedRegion(
+												new CellRangeAddress(firstRow, firstRow + rowStepPlus, 3, 3));
+									}
+									if (!"".equals(this.workbook.getSheetAt(i).getRow(11 + m).getCell(3)
+											.getStringCellValue())) {
+										firstRow = 11 + m;
+										continue;
+									}
+									if ("".equals(this.workbook.getSheetAt(i).getRow(11 + m).getCell(3)
+											.getStringCellValue().trim()) && m != temp) {
+										temp = m;
+										rowStepPlus += 1;
+										continue;
+									}
+									break;
+								}
+							}
+						}
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -594,32 +667,42 @@ public class ExcelOperation {
 				int numberOfRow = 0;
 				String googleFomular = "=GOOGLETRANSLATE(";
 				String googleFomular1 = "=GOOGLETRANSLATE(";
-				for (i = 0; i < numberOfSheet; ++i) {
-					
+				String googleFomular2 = "=GOOGLETRANSLATE(";
+				for (i = 2; i < numberOfSheet; ++i) {
+
 					if (this.workbook.getSheetAt(i).getSheetName().contains("Data")) {
 						continue;
 					}
-					
+
 					numberOfRow = 0;
 					// xac dinh so row can loop
 					for (k = 0; k < 10000; ++k) {
-						if (this.workbook.getSheetAt(i).getRow(k+11).getCell(1).getNumericCellValue() == 0.0) {
+						if (this.workbook.getSheetAt(i).getRow(k + 11) == null) {
+							break;
+						}
+						if (this.workbook.getSheetAt(i).getRow(k + 11).getCell(1) == null) {
+							break;
+						}
+						if (this.workbook.getSheetAt(i).getRow(k + 11).getCell(1).getNumericCellValue() == 0.0) {
 							break;
 						}
 						numberOfRow++;
 					}
-					
+
 					for (int m = 0; m < numberOfRow; ++m) {
-						
+
 						googleFomular += "H" + (12 + m) + ";\"en\";\"ja\")";
 						googleFomular1 += "J" + (12 + m) + ";\"en\";\"ja\")";
-						XSSFCell cell = this.workbook.getSheetAt(i).getRow(11+m).getCell(6);
-						XSSFCell cell1 = this.workbook.getSheetAt(i).getRow(11+m).getCell(8);
-						
+						googleFomular2 += "E" + (12 + m) + ";\"en\";\"ja\")";
+						XSSFCell cell = this.workbook.getSheetAt(i).getRow(11 + m).getCell(6);
+						XSSFCell cell1 = this.workbook.getSheetAt(i).getRow(11 + m).getCell(8);
+						XSSFCell cell2 = this.workbook.getSheetAt(i).getRow(11 + m).getCell(3);
 						cell.setCellValue(googleFomular);
 						cell1.setCellValue(googleFomular1);
+						cell2.setCellValue(googleFomular2);
 						googleFomular = "=GOOGLETRANSLATE(";
 						googleFomular1 = "=GOOGLETRANSLATE(";
+						googleFomular2 = "=GOOGLETRANSLATE(";
 					}
 				}
 			}
@@ -650,33 +733,54 @@ public class ExcelOperation {
 				String googleFomular2 = "=GOOGLETRANSLATE(";
 				String googleFomular3 = "=GOOGLETRANSLATE(";
 				for (i = 2; i < numberOfSheet; ++i) {
-					
+
 					if (this.workbook.getSheetAt(i).getSheetName().contains("Data")) {
 						continue;
 					}
-					
+
 					numberOfRow = 0;
 					// xac dinh so row can loop
 					for (k = 0; k < 10000; ++k) {
-						if (this.workbook.getSheetAt(i).getRow(k+7).getCell(1) == null) {
+						if (this.workbook.getSheetAt(i).getRow(k + 7) == null) {
 							break;
 						}
-						if (this.workbook.getSheetAt(i).getRow(k+7).getCell(1).getNumericCellValue() == 0.0) {
+						if (this.workbook.getSheetAt(i).getRow(k + 7).getCell(1) == null) {
+							break;
+						}
+						if (this.workbook.getSheetAt(i).getRow(k + 7).getZeroHeight()) {
+							continue;
+						}
+
+						if (this.workbook.getSheetAt(i).getRow(k + 7).getCell(1)
+								.getCellType() == Cell.CELL_TYPE_FORMULA) {
+							switch (this.workbook.getSheetAt(i).getRow(k + 7).getCell(1).getCachedFormulaResultType()) {
+							case Cell.CELL_TYPE_ERROR:
+								if ("#REF!".equals(this.workbook.getSheetAt(i).getRow(k + 7).getCell(1)
+										.getErrorCellString())) {
+									this.workbook.getSheetAt(i).getRow(k + 7).getCell(1)
+											.setCellType(Cell.CELL_TYPE_STRING);
+									numberOfRow++;
+								}
+								continue;
+							}
+						}
+
+						if (this.workbook.getSheetAt(i).getRow(k + 7).getCell(1).getNumericCellValue() == 0.0) {
 							break;
 						}
 						numberOfRow++;
 					}
-					
+
 					for (int m = 0; m < numberOfRow; ++m) {
-						
+
 						googleFomular += "D" + (8 + m) + ";\"en\";\"ja\")";
 						googleFomular1 += "F" + (8 + m) + ";\"en\";\"ja\")";
 						googleFomular2 += "I" + (8 + m) + ";\"en\";\"ja\")";
 						googleFomular3 += "K" + (8 + m) + ";\"en\";\"ja\")";
-						XSSFCell cell = this.workbook.getSheetAt(i).getRow(7+m).getCell(2);
-						XSSFCell cell1 = this.workbook.getSheetAt(i).getRow(7+m).getCell(4);
-						XSSFCell cell2 = this.workbook.getSheetAt(i).getRow(7+m).getCell(7);
-						XSSFCell cell3 = this.workbook.getSheetAt(i).getRow(7+m).getCell(9);
+						XSSFCell cell = this.workbook.getSheetAt(i).getRow(7 + m).getCell(2);
+						XSSFCell cell1 = this.workbook.getSheetAt(i).getRow(7 + m).getCell(4);
+						XSSFCell cell2 = this.workbook.getSheetAt(i).getRow(7 + m).getCell(7);
+						XSSFCell cell3 = this.workbook.getSheetAt(i).getRow(7 + m).getCell(9);
 						cell.setCellValue(googleFomular);
 						cell1.setCellValue(googleFomular1);
 						cell2.setCellValue(googleFomular2);
@@ -690,11 +794,11 @@ public class ExcelOperation {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "insert GG fomular: FAIL";
+			return "insert GG fomular Screen: FAIL";
 		}
 		if (!write2File(linkFi, workbooks)) {
-			return "insert GG fomular: FAIL";
+			return "insert GG fomular Screen: FAIL";
 		}
-		return "insert GG fomular: SUCCESS";
+		return "insert GG fomular Screen: SUCCESS";
 	}
 }

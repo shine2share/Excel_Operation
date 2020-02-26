@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="721.9609375" prefWidth="686.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.shine2share.FiController">
@@ -29,9 +30,9 @@
     <Button fx:id="btnGetLink" font="$x1" layoutX="204.0" layoutY="81.0" mnemonicParsing="false" onAction="#getLinkFile" text="Nhập Link xong thì click me!!!" />
     <Pane layoutX="5.0" layoutY="144.0" prefHeight="227.0" prefWidth="609.0">
       <children>
-        <Button id="btn" fx:id="btnA1" font="$x1" layoutX="27.0" layoutY="15.0" mnemonicParsing="false" onAction="#formatA1" prefWidth="81.0" text="Set A1" />
-        <Button fx:id="btnColor" font="$x1" layoutX="27.0" layoutY="60.0" mnemonicParsing="false" onAction="#setColor" text="Set Color" textFill="$x2" />
-        <ComboBox fx:id="cmbColor" layoutX="128.0" layoutY="61.0" onAction="#choiceColor" prefHeight="24.999916894528724" prefWidth="99.0" promptText="Chọn màu">
+        <Button id="btn" fx:id="btnA1" font="$x1" layoutX="4.0" layoutY="15.0" mnemonicParsing="false" onAction="#formatA1" prefWidth="81.0" text="Set A1" />
+        <Button fx:id="btnColor" font="$x1" layoutX="4.0" layoutY="60.0" mnemonicParsing="false" onAction="#setColor" text="Set Color" textFill="$x2" />
+        <ComboBox fx:id="cmbColor" layoutX="92.0" layoutY="61.0" onAction="#choiceColor" prefHeight="24.999916894528724" prefWidth="99.0" promptText="Chọn màu">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <String fx:value="No_Color" />
@@ -44,14 +45,14 @@
             </FXCollections>
           </items>
         </ComboBox>
-        <Button fx:id="btnFont" layoutX="26.0" layoutY="108.0" mnemonicParsing="false" onAction="#setFont" prefHeight="25.0" prefWidth="81.0" text="Set Font" />
-        <Button fx:id="btnSize" layoutX="27.0" layoutY="150.0" mnemonicParsing="false" onAction="#setSize" prefHeight="25.0" prefWidth="81.0" text="Font Size">
+        <Button fx:id="btnFont" layoutX="3.0" layoutY="108.0" mnemonicParsing="false" onAction="#setFont" prefHeight="25.0" prefWidth="81.0" text="Set Font" />
+        <Button fx:id="btnSize" layoutX="4.0" layoutY="150.0" mnemonicParsing="false" onAction="#setSize" prefHeight="25.0" prefWidth="81.0" text="Font Size">
           <font>
             <Font size="12.0" />
           </font>
         </Button>
-        <TextField fx:id="txtSize" editable="true" layoutX="128.0" layoutY="150.0" prefHeight="24.999908447265625" prefWidth="69.0" promptText="" text="" />
-        <ComboBox fx:id="cmbFont" layoutX="128.0" layoutY="109.0" onAction="#choiceFont" prefHeight="24.999916894528724" prefWidth="190.0" promptText="Chọn Font">
+        <TextField fx:id="txtSize" editable="true" layoutX="92.0" layoutY="150.0" prefHeight="24.999908447265625" prefWidth="69.0" promptText="" text="" />
+        <ComboBox fx:id="cmbFont" layoutX="92.0" layoutY="109.0" onAction="#choiceFont" prefHeight="24.999916894528724" prefWidth="133.0" promptText="Chọn Font">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <String fx:value="Calibri" />
@@ -65,17 +66,18 @@
             </FXCollections>
           </items>
         </ComboBox>
-        <Button fx:id="btnZoom" layoutX="27.0" layoutY="195.0" mnemonicParsing="false" onAction="#setZoom" prefHeight="25.0" prefWidth="81.0" text="Set Zoom" />
-        <TextField fx:id="txtZoom" layoutX="128.0" layoutY="195.0" prefHeight="25.000099999997474" prefWidth="72.0" promptText="" text="" />
-        <Button fx:id="btnDeleteValue" layoutX="483.0" layoutY="52.0" mnemonicParsing="false" onAction="#deleteValue" text="Delete#Value">
+        <Button fx:id="btnZoom" layoutX="4.0" layoutY="195.0" mnemonicParsing="false" onAction="#setZoom" prefHeight="25.0" prefWidth="81.0" text="Set Zoom" />
+        <TextField fx:id="txtZoom" layoutX="92.0" layoutY="195.0" prefHeight="25.000099999997474" prefWidth="72.0" promptText="" text="" />
+        <Button fx:id="btnDeleteValue" layoutX="482.0" layoutY="52.0" mnemonicParsing="false" onAction="#deleteValue" text="2. Delete#Value">
           <font>
             <Font name="System Bold Italic" size="14.0" fx:id="x5" />
           </font>
         </Button>
-        <Button fx:id="btnInsertJpColumn" font="$x5" layoutX="462.0" layoutY="14.0" mnemonicParsing="false" onAction="#insertJpColumn" text="Insert JP column" />
-        <Button fx:id="btnMergeCell" font="$x5" layoutX="503.0" layoutY="89.0" mnemonicParsing="false" onAction="#mergeCell" text="MergeCell" />
-        <Button fx:id="btnInsertGGFomular" font="$x5" layoutX="283.0" layoutY="14.0" mnemonicParsing="false" onAction="#insertGGFomular" text="Insert GG Fomular API" />
-        <Button fx:id="btnInsertGGFomularScreen" font="$x5" layoutX="277.0" layoutY="54.0" mnemonicParsing="false" onAction="#insertGGFomularScreen" text="Insert GG Fomular Screen" />
+        <Button fx:id="btnInsertJpColumn" font="$x5" layoutX="476.0" layoutY="14.0" mnemonicParsing="false" onAction="#insertJpColumn" text="Insert JP column" />
+        <Button fx:id="btnMergeCell" font="$x5" layoutX="503.0" layoutY="89.0" mnemonicParsing="false" onAction="#mergeCell" text="3. MergeCell" />
+        <Button fx:id="btnInsertGGFomular" font="$x5" layoutX="278.0" layoutY="14.0" mnemonicParsing="false" onAction="#insertGGFomular" text="1.1 Insert GG Fomular API" />
+        <Button fx:id="btnInsertGGFomularScreen" font="$x5" layoutX="262.0" layoutY="54.0" mnemonicParsing="false" onAction="#insertGGFomularScreen" text="1.2 Insert GG Fomular Screen" />
+        <TextArea editable="false" layoutX="267.0" layoutY="89.0" prefHeight="149.0" prefWidth="164.99997792968497" text="&#10;Guide:&#10;run 1.1 (1.2)&#10;upload to GG Sheet &#10;find and replace (=)&#10;download file &#10;run 2 &#10;run 3" wrapText="true" />
       </children>
     </Pane>
     <Text fx:id="txtCopyright" fill="$x2" layoutX="235.0" layoutY="709.0" scaleX="1.109610156066023" scaleY="1.2873738865933273" strokeType="OUTSIDE" strokeWidth="0.0" text="From Anh with Love">
