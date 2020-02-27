@@ -42,6 +42,8 @@ public class FiController implements Initializable {
 	private TextField txtSize;
 	@FXML
 	private TextField txtZoom;
+	
+	
 	@FXML
 	private TextField txtNewSpecWord;
 
@@ -113,6 +115,20 @@ public class FiController implements Initializable {
 	
 	@FXML
 	private Button btnInsertGGFomularScreen;
+	
+	@Getter
+	@Setter
+	private int screenOrApiColumn;
+	
+	@Getter
+	@Setter
+	private int screenOrApiCell;
+	
+	@FXML
+	private TextField txtScreenOrApiColumn;
+	
+	@FXML
+	private TextField txtScreenOrApiCell;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -416,8 +432,23 @@ public class FiController implements Initializable {
 			return;
 		}
 		this.txtResult.setText("");
+		
+		if (StringUtils.isNumeric(this.txtScreenOrApiColumn.getText().trim())) {
+			this.screenOrApiColumn = Integer.parseInt(this.txtScreenOrApiColumn.getText().trim());
+		} else {
+			this.txtResult.setText("Vui lòng nhập số");
+			return;
+		}
+		
+		if (StringUtils.isNumeric(this.txtScreenOrApiCell.getText().trim())) {
+			this.screenOrApiCell = Integer.parseInt(this.txtScreenOrApiCell.getText().trim());
+		} else {
+			this.txtResult.setText("Vui lòng nhập số");
+			return;
+		}
+		
 		excelOperation = new ExcelOperation();
-		String response = excelOperation.mergeCell(this.linkFi);
+		String response = excelOperation.mergeCell(this.linkFi, this.screenOrApiColumn, this.screenOrApiCell);
 		this.txtResult.setText(response);
 	}
 	
