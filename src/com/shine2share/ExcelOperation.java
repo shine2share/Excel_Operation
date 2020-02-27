@@ -589,12 +589,12 @@ public class ExcelOperation {
 								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
 										.getCell(screenOrApiCell) != null
 								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-										.getStringCellValue() != null && !"".equals(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-										.getStringCellValue().trim())
-								) {
+										.getStringCellValue() != null
+								&& !"".equals(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
+										.getCell(screenOrApiCell).getStringCellValue().trim())) {
 							CellStyle style = this.workbook.createCellStyle();
 							style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-							style.setFillPattern((short)1);  
+							style.setFillPattern((short) 1);
 							this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
 									.setCellStyle(style);
 						}
@@ -611,7 +611,7 @@ public class ExcelOperation {
 		}
 		return "merge cell: SUCCESS";
 	}
-	
+
 	public String mergeCell(String linkFi, int screenOrApiColumns, int screenOrApiCells) {
 		List<XSSFWorkbook> workbooks = new ArrayList<>();
 		try {
@@ -636,25 +636,56 @@ public class ExcelOperation {
 					numberOfRow = 0;
 					int screenOrApiColumn = screenOrApiColumns;
 					int screenOrApiCell = screenOrApiCells;
-					for (int m = 0; m < 5000; ++m) {
-						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m) != null
-								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
-										.getCell(screenOrApiCell) != null
-								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-										.getStringCellValue() != null && !"".equals(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-										.getStringCellValue().trim())
-								) {
-							CellStyle style = this.workbook.createCellStyle();
-							style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-							style.setFillPattern((short)1);  
-							style.setBorderBottom((short)1);
-							style.setBorderRight((short)1);
-							style.setBorderLeft((short)1);
-							style.setBorderTop((short)1);
-							this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-									.setCellStyle(style);
-						}
-					}
+/////////////////================================================================//////////////////////////////////
+
+					 this.workbook.getSheetAt(i).setColumnWidth(screenOrApiColumn,
+					 screenOrApiCell);
+
+					
+					////////////////////===========================================///////////////////////////////////////
+					
+					
+//					for (int q = 0; q < 100; ++q) {
+//
+//						this.workbook.getSheetAt(i).autoSizeColumn(q);;
+//					}
+
+					
+					
+					////////////======================================//////////////////////////////
+//					for (int w = 0; w < 2000; ++w) {
+//						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + w) == null) {
+//							break;
+//						}
+//
+//						this.workbook.getSheetAt(i).getRow(screenOrApiColumn + w).setHeight((short) screenOrApiCell);
+//					}
+//					 
+
+					
+					
+					
+//					
+//					for (int m = 0; m < 3000; ++m) {
+//						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m) != null
+//								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
+//										.getCell(screenOrApiCell) != null
+//								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
+//										.getStringCellValue() != null
+//								&& !"".equals(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
+//										.getCell(screenOrApiCell).getStringCellValue().trim())) {
+//
+//							this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
+//									.setCellStyle(this.workbook.getSheetAt(2).getRow(7).getCell(7)
+//											.getCellStyle());
+//						}
+//					}
+//					
+					
+					
+					
+					
+					
 
 				}
 			}
@@ -667,7 +698,7 @@ public class ExcelOperation {
 		}
 		return "merge cell: SUCCESS";
 	}
-	
+
 	public String mergeCell1(String linkFi, int screenOrApiColumns, int screenOrApiCells) {
 		List<XSSFWorkbook> workbooks = new ArrayList<>();
 		try {
@@ -697,11 +728,10 @@ public class ExcelOperation {
 								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
 										.getCell(screenOrApiCell) != null
 								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-										.getStringCellValue() != null
-								) {
+										.getStringCellValue() != null) {
 							CellStyle style = this.workbook.createCellStyle();
-							style.setBorderBottom((short)1);
-							style.setBorderRight((short)1);
+							style.setBorderBottom((short) 1);
+							style.setBorderRight((short) 1);
 							this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
 									.setCellStyle(style);
 						}
