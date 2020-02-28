@@ -79,7 +79,8 @@
         <Button fx:id="btnInsertGGFomularScreen" font="$x5" layoutX="262.0" layoutY="54.0" mnemonicParsing="false" onAction="#insertGGFomularScreen" text="1.2 Insert GG Fomular Screen" />
         <TextField fx:id="txtScreenOrApiColumn" layoutX="487.0" layoutY="92.0" prefWidth="106.0" promptText="row thứ mấy" />
         <TextField fx:id="txtScreenOrApiCell" layoutX="487.0" layoutY="128.0" prefWidth="106.0" promptText="cell thứ mấy" />
-        <Button layoutX="290.0" layoutY="99.0" mnemonicParsing="false" text="Xác định row ko có stt" />
+        <Button fx:id="btnDetemineStt" layoutX="300.0" layoutY="87.0" mnemonicParsing="false" onAction="#detemineStt" text="Xác định row ko có stt" />
+        <TextArea layoutX="296.0" layoutY="128.0" prefHeight="63.0" prefWidth="145.0" text="screen: row 7 - stt cell 1&#10;api: row 11 - stt cell 1" wrapText="true" />
       </children>
     </Pane>
     <Text fx:id="txtResult" fill="#00d100" layoutX="213.0" layoutY="132.0" scaleX="1.4665698892858452" scaleY="1.5019349608418993" strokeType="OUTSIDE" strokeWidth="0.0" text="Result" textAlignment="JUSTIFY">

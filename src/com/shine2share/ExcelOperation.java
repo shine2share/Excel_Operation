@@ -638,21 +638,16 @@ public class ExcelOperation {
 					int screenOrApiCell = screenOrApiCells;
 /////////////////================================================================//////////////////////////////////
 
-					 this.workbook.getSheetAt(i).setColumnWidth(screenOrApiColumn,
-					 screenOrApiCell);
+					this.workbook.getSheetAt(i).setColumnWidth(screenOrApiColumn, screenOrApiCell);
 
-					
-					////////////////////===========================================///////////////////////////////////////
-					
-					
+					//////////////////// ===========================================///////////////////////////////////////
+
 //					for (int q = 0; q < 100; ++q) {
 //
 //						this.workbook.getSheetAt(i).autoSizeColumn(q);;
 //					}
 
-					
-					
-					////////////======================================//////////////////////////////
+					//////////// ======================================//////////////////////////////
 //					for (int w = 0; w < 2000; ++w) {
 //						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + w) == null) {
 //							break;
@@ -662,9 +657,6 @@ public class ExcelOperation {
 //					}
 //					 
 
-					
-					
-					
 //					
 //					for (int m = 0; m < 3000; ++m) {
 //						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m) != null
@@ -681,11 +673,6 @@ public class ExcelOperation {
 //						}
 //					}
 //					
-					
-					
-					
-					
-					
 
 				}
 			}
@@ -1105,4 +1092,70 @@ public class ExcelOperation {
 		}
 		return "merge cell: SUCCESS";
 	}
+
+	/**
+	 * detemine stt has no value
+	 * 
+	 * @param linkFi
+	 * @param screenOrApiColumn
+	 * @param screenOrApiCell
+	 * @return
+	 */
+	public String detemineStt(String linkFi, int screenOrApiColumn, int screenOrApiCell) {
+		int screenOrApiColumns = screenOrApiColumn;
+		List<XSSFWorkbook> workbooks = new ArrayList<>();
+		try {
+			List<InputStream> files = initialize(linkFi);
+			int j;
+			for (j = 0; j < files.size(); ++j) {
+				System.out.println("=========Working in file thu " + (j+1) + " ===========");
+				this.workbook = new XSSFWorkbook(files.get(j));
+				workbooks.add(this.workbook);
+				int numberOfSheet = this.workbook.getNumberOfSheets();
+				int i;
+				// start at sheet 2 because 2 first sheet no need
+				for (i = 2; i < numberOfSheet; ++i) {
+					if (this.workbook.getSheetAt(i).getSheetName().contains("Data")) {
+						continue;
+					}
+					System.out.println("Working in sheet: " + this.workbook.getSheetAt(i).getSheetName());
+					for (int k = 0; k < 3000; ++k) {
+						if (this.workbook.getSheetAt(i).getRow(k) == null) {
+							continue;
+						}
+						// bỏ qua những row trên cùng (ko phải row test case
+						if (this.workbook.getSheetAt(i).getRow(k).getRowNum() < screenOrApiColumns) {
+							continue;
+						}
+						try {
+
+							if ("".equals(this.workbook.getSheetAt(i).getRow(k).getCell(1).getStringCellValue().trim())) {
+								if ("".equals(this.workbook.getSheetAt(i).getRow(k).getCell(1).getStringCellValue().trim()) && "".equals(this.workbook.getSheetAt(i).getRow(k+1).getCell(1).getStringCellValue().trim())) {
+									break;
+								}
+								System.out.println("Row thứ " + (this.workbook.getSheetAt(i).getRow(k).getRowNum() + 1));
+							}
+						} catch (Exception e) {
+							if (this.workbook.getSheetAt(i).getRow(k).getCell(1).getCellType() == Cell.CELL_TYPE_FORMULA) {
+								switch (this.workbook.getSheetAt(i).getRow(k).getCell(1).getCachedFormulaResultType()) {
+								case Cell.CELL_TYPE_STRING:
+									System.out.println("cell value in exception: "
+											+ this.workbook.getSheetAt(i).getRow(k).getCell(1).getRichStringCellValue().getString());
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Detemine STT: FAIL";
+		}
+		if (!write2File(linkFi, workbooks)) {
+			return "Detemine STT: FAIL";
+		}
+		return "Detemine STT: SUCCESS";
+	}
+
 }
