@@ -380,107 +380,6 @@ public class ExcelOperation {
 		return "Delete #Value: SUCCESS";
 	}
 
-///////////////////////////////////insert new column///////////////////////////////////////////////
-/////////////////////////////////insert new column///////////////////////////////////////////////
-/////////////////////////////////insert new column///////////////////////////////////////////////
-/////////////////////////////////insert new column///////////////////////////////////////////////
-/////////////////////////////////insert new column///////////////////////////////////////////////
-/////////////////////////////////insert new column///////////////////////////////////////////////
-/////////////////////////////////insert new column///////////////////////////////////////////////
-	/**
-	 * insert new column before D column with title テストケース and change title of E
-	 * (after insert) to Testcase
-	 * 
-	 * @param linkFi
-	 * @return
-	 */
-	public String insertJpColumn(String linkFi) {
-		List<XSSFWorkbook> workbooks = new ArrayList<>();
-		try {
-			List<InputStream> files = initialize(linkFi);
-			int j;
-			for (j = 0; j < files.size(); ++j) {
-				this.workbook = new XSSFWorkbook(files.get(j));
-				workbooks.add(this.workbook);
-
-				FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-				evaluator.clearAllCachedResultValues();
-
-				int numberOfSheet = this.workbook.getNumberOfSheets();
-				int i;
-				// the first 2 sheet are not need to insert
-				for (i = 2; i < numberOfSheet; ++i) {
-					Sheet sheet = workbook.getSheetAt(i);
-					int nrRows = getNumberOfRows(i);
-					int nrCols = getNrColumns(i);
-					System.out.println("Inserting new column...");
-					for (int row = 0; row < nrRows; row++) {
-						Row r = sheet.getRow(row);
-
-						if (r == null) {
-							continue;
-						}
-
-						// shift to right
-						// columnIndex = 2
-						for (int col = nrCols; col > 2; col--) {
-							Cell rightCell = r.getCell(col);
-							if (rightCell != null) {
-								r.removeCell(rightCell);
-							}
-
-							Cell leftCell = r.getCell(col - 1);
-
-							if (leftCell != null) {
-								Cell newCell = r.createCell(col, leftCell.getCellType());
-								cloneCell(newCell, leftCell);
-								if (newCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
-									newCell.setCellFormula(ExcelHelper.updateFormula(newCell.getCellFormula(), 2));
-									evaluator.notifySetFormula(newCell);
-									CellValue cellValue = evaluator.evaluate(newCell);
-									evaluator.evaluateFormulaCell(newCell);
-									System.out.println(cellValue);
-								}
-							}
-						}
-
-						// delete old column
-						int cellType = Cell.CELL_TYPE_BLANK;
-
-						Cell currentEmptyWeekCell = r.getCell(2);
-						if (currentEmptyWeekCell != null) {
-//							cellType = currentEmptyWeekCell.getCellType();
-							r.removeCell(currentEmptyWeekCell);
-						}
-
-						// create new column
-						r.createCell(2, cellType);
-					}
-
-					// Adjust the column widths
-					for (int col = nrCols; col > 2; col--) {
-						sheet.setColumnWidth(col, sheet.getColumnWidth(col - 1));
-					}
-
-					// currently updates formula on the last cell of the moved column
-//					Row specialRow = sheet.getRow(nrRows-1);
-//					Cell cellFormula = specialRow.createCell(nrCols - 1);
-//					cellFormula.setCellType(XSSFCell.CELL_TYPE_FORMULA);
-//					cellFormula.setCellFormula(formula);
-
-					XSSFFormulaEvaluator.evaluateAllFormulaCells(workbook);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Insert JP Column: FAIL";
-		}
-		if (!write2File(linkFi, workbooks)) {
-			return "Insert JP Column: FAIL";
-		}
-		return "Insert JP Column: SUCCESS";
-	}
-
 	private int getNumberOfRows(int sheetIndex) {
 		assert workbook != null;
 
@@ -499,34 +398,6 @@ public class ExcelOperation {
 		System.out.println("Found " + rowNum + " rows.");
 
 		return rowNum;
-	}
-
-	private int getNrColumns(int sheetIndex) {
-		assert workbook != null;
-
-		Sheet sheet = workbook.getSheetAt(sheetIndex);
-
-		// get header row
-		Row headerRow = sheet.getRow(0);
-		int nrCol = headerRow.getLastCellNum();
-
-		// while
-		// (!headerRow.getCell(nrCol++).getStringCellValue().equals(LAST_COLUMN_HEADER));
-
-		// while (nrCol <= headerRow.getPhysicalNumberOfCells()) {
-		// Cell c = headerRow.getCell(nrCol);
-		// nrCol++;
-		//
-		// if (c!= null && c.getCellType() == Cell.CELL_TYPE_STRING) {
-		// if (c.getStringCellValue().equals(LAST_COLUMN_HEADER)) {
-		// break;
-		// }
-		// }
-		// }
-
-		System.out.println("Found " + nrCol + " columns.");
-		return nrCol;
-
 	}
 
 	/*
@@ -604,15 +475,15 @@ public class ExcelOperation {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "merge cell: FAIL";
+			return "themvien: FAIL";
 		}
 		if (!write2File(linkFi, workbooks)) {
-			return "merge cell: FAIL";
+			return "themvien: FAIL";
 		}
-		return "merge cell: SUCCESS";
+		return "themvien: SUCCESS";
 	}
 
-	public String mergeCell(String linkFi, int screenOrApiColumns, int screenOrApiCells) {
+	public String setStype(String linkFi, int screenOrApiColumns, int screenOrApiCells, int cellOfTypeToCope) {
 		List<XSSFWorkbook> workbooks = new ArrayList<>();
 		try {
 			List<InputStream> files = initialize(linkFi);
@@ -636,23 +507,18 @@ public class ExcelOperation {
 					numberOfRow = 0;
 					int screenOrApiColumn = screenOrApiColumns;
 					int screenOrApiCell = screenOrApiCells;
-/////////////////================================================================//////////////////////////////////
+					/////////////////================================================================//////////////////////////////////
 
-					 this.workbook.getSheetAt(i).setColumnWidth(screenOrApiColumn,
-					 screenOrApiCell);
+					this.workbook.getSheetAt(i).setColumnWidth(screenOrApiColumn, screenOrApiCell);
 
-					
-					////////////////////===========================================///////////////////////////////////////
-					
-					
+					//////////////////// ===========================================///////////////////////////////////////
+
 //					for (int q = 0; q < 100; ++q) {
 //
 //						this.workbook.getSheetAt(i).autoSizeColumn(q);;
 //					}
 
-					
-					
-					////////////======================================//////////////////////////////
+					//////////// ======================================//////////////////////////////
 //					for (int w = 0; w < 2000; ++w) {
 //						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + w) == null) {
 //							break;
@@ -663,43 +529,35 @@ public class ExcelOperation {
 //					 
 
 					
-					
-					
-//					
-//					for (int m = 0; m < 3000; ++m) {
-//						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m) != null
-//								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
-//										.getCell(screenOrApiCell) != null
-//								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-//										.getStringCellValue() != null
-//								&& !"".equals(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
-//										.getCell(screenOrApiCell).getStringCellValue().trim())) {
-//
-//							this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-//									.setCellStyle(this.workbook.getSheetAt(2).getRow(7).getCell(7)
-//											.getCellStyle());
-//						}
-//					}
-//					
-					
-					
-					
-					
+					for (int m = 0; m < 3000; ++m) {
+						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m) != null
+								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
+										.getCell(screenOrApiCell) != null
+								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
+										.getStringCellValue() != null
+								&& !"".equals(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
+										.getCell(screenOrApiCell).getStringCellValue().trim())) {
+
+							this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
+									.setCellStyle(this.workbook.getSheetAt(2).getRow(screenOrApiColumn).getCell(screenOrApiCell)
+											.getCellStyle());
+						}
+					}
 					
 
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "merge cell: FAIL";
+			return "setStype: FAIL";
 		}
 		if (!write2File(linkFi, workbooks)) {
-			return "merge cell: FAIL";
+			return "setStype: FAIL";
 		}
-		return "merge cell: SUCCESS";
+		return "setStype: SUCCESS";
 	}
 
-	public String mergeCell1(String linkFi, int screenOrApiColumns, int screenOrApiCells) {
+	public String setBorder(String linkFi, int screenOrApiColumns, int screenOrApiCells) {
 		List<XSSFWorkbook> workbooks = new ArrayList<>();
 		try {
 			List<InputStream> files = initialize(linkFi);
@@ -741,15 +599,15 @@ public class ExcelOperation {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "merge cell: FAIL";
+			return "setBorder: FAIL";
 		}
 		if (!write2File(linkFi, workbooks)) {
-			return "merge cell: FAIL";
+			return "setBorder: FAIL";
 		}
-		return "merge cell: SUCCESS";
+		return "setBorder: SUCCESS";
 	}
 
-	public String boCongThucBackup(String linkFi, int screenOrApiColumns, int screenOrApiCells) {
+	public String boCongThuc(String linkFi, int screenOrApiColumns, int screenOrApiCells) {
 		List<XSSFWorkbook> workbooks = new ArrayList<>();
 		try {
 			List<InputStream> files = initialize(linkFi);
@@ -774,31 +632,37 @@ public class ExcelOperation {
 					int screenOrApiColumn = screenOrApiColumns;
 					int screenOrApiCell = screenOrApiCells;
 					for (int m = 0; m < 10000; ++m) {
-						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m) != null
-								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
-										.getCell(screenOrApiCell) != null
-								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-										.getStringCellValue() != null
-								&& !"".equals(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
-										.getCell(screenOrApiCell).getStringCellValue().trim())) {
+						System.out.println("Line thứ: " + (m + 1));
+						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m) != null && this.workbook
+								.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell) != null) {
+
 							this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
 									.setCellType(Cell.CELL_TYPE_STRING);
-							this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-									.setCellValue(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
-											.getCell(screenOrApiCell).getStringCellValue());
-						}
-					}
 
+							if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
+									.getStringCellValue() != null
+									&& !"".equals(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
+											.getCell(screenOrApiCell).getStringCellValue().trim())) {
+								this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
+										.setCellValue(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
+												.getCell(screenOrApiCell).getStringCellValue());
+								System.out.println("changed fomular");
+							}
+
+						}
+
+					}
 				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "merge cell: FAIL";
+			return "Bỏ Công Thức : FAIL";
 		}
 		if (!write2File(linkFi, workbooks)) {
-			return "merge cell: FAIL";
+			return "Bỏ Công Thức : FAIL";
 		}
-		return "merge cell: SUCCESS";
+		return "Bỏ Công Thức : SUCCESS";
 	}
 
 	public String insertGGFomular(String linkFi) {
@@ -817,7 +681,7 @@ public class ExcelOperation {
 				String googleFomular1 = "=GOOGLETRANSLATE(";
 				String googleFomular2 = "=GOOGLETRANSLATE(";
 				for (i = 2; i < numberOfSheet; ++i) {
-
+					System.out.println("sheet: " + this.workbook.getSheetName(i));
 					if (this.workbook.getSheetAt(i).getSheetName().contains("Data")) {
 						continue;
 					}
@@ -845,6 +709,8 @@ public class ExcelOperation {
 						XSSFCell cell = this.workbook.getSheetAt(i).getRow(11 + m).getCell(6);
 						XSSFCell cell1 = this.workbook.getSheetAt(i).getRow(11 + m).getCell(8);
 						XSSFCell cell2 = this.workbook.getSheetAt(i).getRow(11 + m).getCell(3);
+						System.out.println("row thứ: " + m);
+						System.out.println("row cell: " + cell1);
 						cell.setCellValue(googleFomular);
 						cell1.setCellValue(googleFomular1);
 						cell2.setCellValue(googleFomular2);
@@ -950,7 +816,7 @@ public class ExcelOperation {
 		return "insert GG fomular Screen: SUCCESS";
 	}
 
-	public String mergeCellBackup(String linkFi, int screenOrApiColumns, int screenOrApiCells) {
+	public String mergeCell(String linkFi, int screenOrApiColumns, int screenOrApiCells) {
 		List<XSSFWorkbook> workbooks = new ArrayList<>();
 		try {
 			List<InputStream> files = initialize(linkFi);
@@ -1030,6 +896,8 @@ public class ExcelOperation {
 							break;
 						}
 						for (Cell cell : this.workbook.getSheetAt(i).getRow(m + screenOrApiColumn)) {
+							System.out.println(
+									"row: " + this.workbook.getSheetAt(i).getRow(m + screenOrApiColumn).getRowNum());
 							if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
 								switch (cell.getCachedFormulaResultType()) {
 								case Cell.CELL_TYPE_STRING:
@@ -1090,6 +958,9 @@ public class ExcelOperation {
 									}
 
 									break;
+								case Cell.CELL_TYPE_NUMERIC:
+									System.out.println("CELL_TYPE_NUMERIC");
+									break;
 								}
 							}
 						}
@@ -1105,4 +976,110 @@ public class ExcelOperation {
 		}
 		return "merge cell: SUCCESS";
 	}
+
+	/**
+	 * detemine stt has no value
+	 * 
+	 * @param linkFi
+	 * @param screenOrApiColumn
+	 * @param screenOrApiCell
+	 * @return
+	 */
+	public String detemineStt(String linkFi, int screenOrApiColumn, int screenOrApiCell) {
+		int screenOrApiColumns = screenOrApiColumn;
+		List<XSSFWorkbook> workbooks = new ArrayList<>();
+		try {
+			List<InputStream> files = initialize(linkFi);
+			int j;
+			for (j = 0; j < files.size(); ++j) {
+				System.out.println("=========Working in file thu " + (j + 1) + " ===========");
+				this.workbook = new XSSFWorkbook(files.get(j));
+				workbooks.add(this.workbook);
+				int numberOfSheet = this.workbook.getNumberOfSheets();
+				int i;
+				// start at sheet 2 because 2 first sheet no need
+				for (i = 2; i < numberOfSheet; ++i) {
+					if (this.workbook.getSheetAt(i).getSheetName().contains("Data")) {
+						continue;
+					}
+					System.out.println("Working in sheet: " + this.workbook.getSheetAt(i).getSheetName());
+					for (int k = 0; k < 3000; ++k) {
+						if (this.workbook.getSheetAt(i).getRow(k) == null) {
+							continue;
+						}
+						// bỏ qua những row trên cùng (ko phải row test case
+						if (this.workbook.getSheetAt(i).getRow(k).getRowNum() < screenOrApiColumns) {
+							continue;
+						}
+
+						if (this.workbook.getSheetAt(i).getRow(k) != null
+								&& this.workbook.getSheetAt(i).getRow(k).getCell(1) != null && this.workbook
+										.getSheetAt(i).getRow(k).getCell(1).getCellType() == Cell.CELL_TYPE_FORMULA) {
+							switch (this.workbook.getSheetAt(i).getRow(k).getCell(1).getCachedFormulaResultType()) {
+							case 0:
+								break;
+							}
+						} else {
+							if (this.workbook.getSheetAt(i).getRow(k) != null
+									&& this.workbook.getSheetAt(i).getRow(k).getCell(1) != null
+									&& "".equals(this.workbook.getSheetAt(i).getRow(k).getCell(1).getStringCellValue()
+											.trim())) {
+								if (this.workbook.getSheetAt(i).getRow(k + 1) == null) {
+									break;
+								}
+								if (this.workbook.getSheetAt(i).getRow(k + 1).getCell(1) == null) {
+									break;
+								}
+								if (this.workbook.getSheetAt(i).getRow(k + 1).getCell(1)
+										.getCellType() == Cell.CELL_TYPE_FORMULA) {
+									System.out.println(
+											"Row thứ " + (this.workbook.getSheetAt(i).getRow(k).getRowNum() + 1));
+									switch (this.workbook.getSheetAt(i).getRow(k + 1).getCell(1)
+											.getCachedFormulaResultType()) {
+									case 0:
+										break;
+									}
+								} else if (this.workbook.getSheetAt(i).getRow(k + 1).getCell(1)
+										.getCellType() == Cell.CELL_TYPE_STRING) {
+									System.out.println(
+											"Row thứ " + (this.workbook.getSheetAt(i).getRow(k).getRowNum() + 1));
+									switch (this.workbook.getSheetAt(i).getRow(k + 1).getCell(1)
+											.getCachedFormulaResultType()) {
+									case 0:
+										break;
+									}
+								} else if (this.workbook.getSheetAt(i).getRow(k + 1).getCell(1)
+										.getCellType() == Cell.CELL_TYPE_BLANK) {
+									System.out.println(
+											"Row thứ " + (this.workbook.getSheetAt(i).getRow(k).getRowNum() + 1));
+									switch (this.workbook.getSheetAt(i).getRow(k + 1).getCell(1)
+											.getStringCellValue()) {
+									case "":
+										break;
+									}
+								} else {
+									if ("".equals(this.workbook.getSheetAt(i).getRow(k + 1).getCell(1)
+											.getStringCellValue().trim()))
+										break;
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Detemine STT: FAIL";
+		}
+		if (!write2File(linkFi, workbooks)) {
+			return "Detemine STT: FAIL";
+		}
+		return "Detemine STT: SUCCESS";
+	}
+
+	public String insertJpColumn(String linkFi) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
