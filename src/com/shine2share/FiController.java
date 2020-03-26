@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import lombok.Getter;
@@ -519,7 +520,25 @@ public class FiController implements Initializable {
 			this.txtResult.setText("Vui lòng nhập số");
 			return;
 		}
+		
+		if (StringUtils.isNumeric(this.txtScreenOrApiColumn.getText().trim())) {
+			this.screenOrApiColumn = Integer.parseInt(this.txtScreenOrApiColumn.getText().trim());
+		} else {
+			this.txtResult.setText("Vui lòng nhập số");
+			return;
+		}
+		
+		if (StringUtils.isNumeric(this.txtScreenOrApiCell.getText().trim())) {
+			this.screenOrApiCell = Integer.parseInt(this.txtScreenOrApiCell.getText().trim());
+		} else {
+			this.txtResult.setText("Vui lòng nhập số");
+			return;
+		}
+		
 		excelOperation = new ExcelOperation();
+		System.out.println("Column: " + this.screenOrApiColumn);
+		System.out.println("Cell: " + this.screenOrApiCell);
+		System.out.println("CellCopy: " + this.cellOfTypeToCope);
 		String response = excelOperation.setStype(this.linkFi, this.screenOrApiColumn, this.screenOrApiCell, this.cellOfTypeToCope);
 		this.txtResult.setText(response);
 	}

@@ -490,6 +490,7 @@ public class ExcelOperation {
 			int j;
 			int firstRow = 0;
 			for (j = 0; j < files.size(); ++j) {
+				System.out.println("working in file " + (j + 1));
 				int numberOfRow = 0;
 				int k = 0;
 				this.workbook = new XSSFWorkbook(files.get(j));
@@ -507,9 +508,10 @@ public class ExcelOperation {
 					numberOfRow = 0;
 					int screenOrApiColumn = screenOrApiColumns;
 					int screenOrApiCell = screenOrApiCells;
-					/////////////////================================================================//////////////////////////////////
+					///////////////// ================================================================//////////////////////////////////
 
-					this.workbook.getSheetAt(i).setColumnWidth(screenOrApiColumn, screenOrApiCell);
+					// this.workbook.getSheetAt(i).setColumnWidth(screenOrApiColumn,
+					// screenOrApiCell);
 
 					//////////////////// ===========================================///////////////////////////////////////
 
@@ -519,32 +521,34 @@ public class ExcelOperation {
 //					}
 
 					//////////// ======================================//////////////////////////////
-//					for (int w = 0; w < 2000; ++w) {
-//						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + w) == null) {
-//							break;
-//						}
-//
-//						this.workbook.getSheetAt(i).getRow(screenOrApiColumn + w).setHeight((short) screenOrApiCell);
-//					}
-//					 
 
-					
-					for (int m = 0; m < 3000; ++m) {
-						if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m) != null
-								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
-										.getCell(screenOrApiCell) != null
-								&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-										.getStringCellValue() != null
-								&& !"".equals(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
-										.getCell(screenOrApiCell).getStringCellValue().trim())) {
+					if (screenOrApiCell > 1000) {
+						for (int w = 0; w < 2000; ++w) {
+							if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + w) == null) {
+								break;
+							}
 
-							this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
-									.setCellStyle(this.workbook.getSheetAt(2).getRow(screenOrApiColumn).getCell(screenOrApiCell)
-											.getCellStyle());
+							this.workbook.getSheetAt(i).getRow(screenOrApiColumn + w)
+									.setHeight((short) screenOrApiCell);
 						}
-					}
-					
 
+					} else {
+						for (int m = 0; m < 3000; ++m) {
+							if (this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m) != null
+									&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
+											.getCell(screenOrApiCell) != null
+									&& this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
+											.getCell(screenOrApiCell).getStringCellValue() != null
+									&& !"".equals(this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m)
+											.getCell(screenOrApiCell).getStringCellValue().trim())) {
+
+								this.workbook.getSheetAt(i).getRow(screenOrApiColumn + m).getCell(screenOrApiCell)
+										.setCellStyle(this.workbook.getSheetAt(2).getRow(screenOrApiColumn)
+												.getCell(cellOfTypeToCope).getCellStyle());
+							}
+						}
+
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -1052,8 +1056,7 @@ public class ExcelOperation {
 										.getCellType() == Cell.CELL_TYPE_BLANK) {
 									System.out.println(
 											"Row thứ " + (this.workbook.getSheetAt(i).getRow(k).getRowNum() + 1));
-									switch (this.workbook.getSheetAt(i).getRow(k + 1).getCell(1)
-											.getStringCellValue()) {
+									switch (this.workbook.getSheetAt(i).getRow(k + 1).getCell(1).getStringCellValue()) {
 									case "":
 										break;
 									}
