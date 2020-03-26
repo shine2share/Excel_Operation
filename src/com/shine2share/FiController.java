@@ -124,6 +124,13 @@ public class FiController implements Initializable {
 	@Setter
 	private int screenOrApiCell;
 	
+	@Getter
+	@Setter
+	private int cellOfTypeToCope;
+	
+	@FXML
+	private TextField txtCellOfTypeToCope;
+	
 	@FXML
 	private TextField txtScreenOrApiColumn;
 	
@@ -132,6 +139,12 @@ public class FiController implements Initializable {
 	
 	@FXML
 	private Button btnDetemineStt;
+	
+	@FXML
+	private Button btnSetStype;
+	
+	@FXML
+	private Button btnBoCongThuc;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -491,6 +504,41 @@ public class FiController implements Initializable {
 		}
 		excelOperation = new ExcelOperation();
 		String response = excelOperation.detemineStt(this.linkFi, this.screenOrApiColumn, this.screenOrApiCell);
+		this.txtResult.setText(response);
+	}
+	
+	public void setStype() {
+		if (StringUtils.isEmpty(this.linkFi)) {
+			this.txtResult.setText("Nhập link đi cưng");
+			return;
+		}
+		this.txtResult.setText("");
+		if (StringUtils.isNumeric(this.txtCellOfTypeToCope.getText().trim())) {
+			this.cellOfTypeToCope = Integer.parseInt(this.txtCellOfTypeToCope.getText().trim());
+		} else {
+			this.txtResult.setText("Vui lòng nhập số");
+			return;
+		}
+		excelOperation = new ExcelOperation();
+		String response = excelOperation.setStype(this.linkFi, this.screenOrApiColumn, this.screenOrApiCell, this.cellOfTypeToCope);
+		this.txtResult.setText(response);
+	}
+	
+	
+	public void boCongThuc() {
+		if (StringUtils.isEmpty(this.linkFi)) {
+			this.txtResult.setText("Nhập link đi cưng");
+			return;
+		}
+		this.txtResult.setText("");
+		if (StringUtils.isNumeric(this.txtScreenOrApiColumn.getText().trim())) {
+			this.screenOrApiColumn = Integer.parseInt(this.txtScreenOrApiColumn.getText().trim());
+		} else {
+			this.txtResult.setText("Vui lòng nhập số");
+			return;
+		}
+		excelOperation = new ExcelOperation();
+		String response = excelOperation.boCongThuc(this.linkFi, this.screenOrApiColumn, this.screenOrApiCell);
 		this.txtResult.setText(response);
 	}
 }
