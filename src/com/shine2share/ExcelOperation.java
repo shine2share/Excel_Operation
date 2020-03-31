@@ -713,7 +713,7 @@ public class ExcelOperation {
 						XSSFCell cell = this.workbook.getSheetAt(i).getRow(11 + m).getCell(6);
 						XSSFCell cell1 = this.workbook.getSheetAt(i).getRow(11 + m).getCell(8);
 						XSSFCell cell2 = this.workbook.getSheetAt(i).getRow(11 + m).getCell(3);
-						System.out.println("row thứ: " + m);
+						System.out.println("row thứ: " + (m+12));
 						System.out.println("row cell: " + cell1);
 						cell.setCellValue(googleFomular);
 						cell1.setCellValue(googleFomular1);
@@ -740,6 +740,7 @@ public class ExcelOperation {
 			List<InputStream> files = initialize(linkFi);
 			int j;
 			for (j = 0; j < files.size(); ++j) {
+				System.out.println("working in file " + (j+1));
 				this.workbook = new XSSFWorkbook(files.get(j));
 				workbooks.add(this.workbook);
 				int numberOfSheet = this.workbook.getNumberOfSheets();
@@ -751,10 +752,10 @@ public class ExcelOperation {
 				String googleFomular2 = "=GOOGLETRANSLATE(";
 				String googleFomular3 = "=GOOGLETRANSLATE(";
 				for (i = 2; i < numberOfSheet; ++i) {
-
 					if (this.workbook.getSheetAt(i).getSheetName().contains("Data")) {
 						continue;
 					}
+					System.out.println("sheet: " + this.workbook.getSheetAt(i).getSheetName());
 
 					numberOfRow = 0;
 					// xac dinh so row can loop
@@ -827,6 +828,7 @@ public class ExcelOperation {
 			int j;
 			int firstRow = 0;
 			for (j = 0; j < files.size(); ++j) {
+				System.out.println("working in file: " + (j+1));
 				int numberOfRow = 0;
 				int k;
 				this.workbook = new XSSFWorkbook(files.get(j));
